@@ -6,14 +6,21 @@
 trigger:
 - main
 
-pool:
-  vmImage: 'ubuntu-latest'
+variables:
+  uatBatchFile: 'C:\Program Files\Epic Games\UE_4.25\Engine\Build\BatchFiles\RunUAT.bat'
+  majorVersion: 0
+  minorVersion: 1
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+name: '$(majorVersion).$(minorVersion).$(Rev:r)'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+jobs:
+- job: buildPlugin
+
+  pool: 'default'
+
+  displayName: Build Plugin Job
+
+  steps:
+  - script: $(uatBatchFile) BuildPlugin -Plugin="Plugins/JiraPlugin/JiraPlugin.uplugin" -Package="Build/JiraPlugin" -CreateSubFolder
+    displayName: 'Run UAT'
+
