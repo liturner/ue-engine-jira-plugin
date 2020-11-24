@@ -7,7 +7,7 @@ trigger:
 - main
 
 variables:
-  uatBatchFile: '"C:\Program Files\Epic Games\UE_4.25\Engine\Build\BatchFiles\RunUAT.bat"'
+  uatBatchDir: '"C:\Program Files\Epic Games\UE_4.25\Engine\Build\BatchFiles\"'
   majorVersion: 0
   minorVersion: 1
 
@@ -21,6 +21,10 @@ jobs:
   displayName: Build Plugin Job
 
   steps:
-  - script: $(uatBatchFile) BuildPlugin -Plugin="Plugins/JiraPlugin/JiraPlugin.uplugin" -Package="Build/JiraPlugin" -CreateSubFolder
+  - task: CmdLine@2
     displayName: 'Run UAT'
+    inputs:
+      script: BuildPlugin -Plugin="$(Build.SourcesDirectory)/Plugins/JiraPlugin/JiraPlugin.uplugin" -Package="$(Build.SourcesDirectory)/Build/JiraPlugin" -CreateSubFolder
+      workingDirectory: $(uatBatchDir)
+
 
