@@ -32,7 +32,7 @@ void FJiraPluginModule::StartupModule()
 	UToolMenus::RegisterStartupCallback(FSimpleMulticastDelegate::FDelegate::CreateRaw(this, &FJiraPluginModule::RegisterMenus));
 	
 	FGlobalTabmanager::Get()->RegisterNomadTabSpawner(JiraPluginTabName, FOnSpawnTab::CreateRaw(this, &FJiraPluginModule::OnSpawnPluginTab))
-		.SetDisplayName(LOCTEXT("FJiraPluginTabTitle", "JiraPlugin"))
+		.SetDisplayName(LOCTEXT("FJiraPluginTabTitle", "Jira"))
 		.SetMenuType(ETabSpawnerMenuType::Hidden);
 }
 

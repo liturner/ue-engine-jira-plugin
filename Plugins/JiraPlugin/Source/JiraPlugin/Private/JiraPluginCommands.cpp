@@ -6,7 +6,7 @@
 
 void FJiraPluginCommands::RegisterCommands()
 {
-	UI_COMMAND(OpenPluginWindow, "JiraPlugin", "Bring up JiraPlugin window", EUserInterfaceActionType::Button, FInputGesture());
+	UI_COMMAND(OpenPluginWindow, "Jira", "Bring up Jira window", EUserInterfaceActionType::Button, FInputGesture());
 }
 
 #undef LOCTEXT_NAMESPACE
