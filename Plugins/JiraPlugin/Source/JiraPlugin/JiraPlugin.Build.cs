@@ -26,6 +26,7 @@ public class JiraPlugin : ModuleRules
 			new string[]
 			{
 				"Core",
+				"HTTP",
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
@@ -42,6 +43,7 @@ public class JiraPlugin : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
+				"Json",
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

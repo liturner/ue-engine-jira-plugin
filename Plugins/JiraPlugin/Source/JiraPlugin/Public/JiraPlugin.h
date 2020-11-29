@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Modules/ModuleManager.h"
+#include "HttpModule.h"
+#include "HttpManager.h"
 
 class FToolBarBuilder;
 class FMenuBuilder;
@@ -24,6 +26,8 @@ private:
 	void RegisterMenus();
 
 	TSharedRef<class SDockTab> OnSpawnPluginTab(const class FSpawnTabArgs& SpawnTabArgs);
+
+	void OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 
 private:
 	TSharedPtr<class FUICommandList> PluginCommands;

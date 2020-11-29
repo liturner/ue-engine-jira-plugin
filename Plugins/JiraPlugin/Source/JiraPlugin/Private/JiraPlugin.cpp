@@ -8,6 +8,10 @@
 #include "Widgets/Layout/SBox.h"
 #include "Widgets/Text/STextBlock.h"
 #include "ToolMenus.h"
+#include "Misc/Base64.h"
+#include "Interfaces/IHttpResponse.h"
+#include "Jira/JiraTypes.h"
+#include "Jira/JiraConnection.h"
 
 static const FName JiraPluginTabName("JiraPlugin");
 
@@ -34,6 +38,8 @@ void FJiraPluginModule::StartupModule()
 	FGlobalTabmanager::Get()->RegisterNomadTabSpawner(JiraPluginTabName, FOnSpawnTab::CreateRaw(this, &FJiraPluginModule::OnSpawnPluginTab))
 		.SetDisplayName(LOCTEXT("FJiraPluginTabTitle", "Jira"))
 		.SetMenuType(ETabSpawnerMenuType::Hidden);
+
+	FModuleManager::LoadModuleChecked<FHttpModule>("HTTP");
 }
 
 void FJiraPluginModule::ShutdownModule()
@@ -52,8 +58,43 @@ void FJiraPluginModule::ShutdownModule()
 	FGlobalTabmanager::Get()->UnregisterNomadTabSpawner(JiraPluginTabName);
 }
 
+int aGlobalInt = 0;
+
+void FJiraPluginModule::OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful) 
+{
+	int32 ResponseCode = Response->GetResponseCode();
+	FString ResponseText = Response->GetContentAsString();
+
+	FJiraPageBeanProject projects;
+	if (!projects.FromJson(ResponseText))
+	{
+		// error
+	}
+
+	bool hasNextPage = projects.HasNextPage();
+	if (!hasNextPage && aGlobalInt == 5)
+	{
+		// error
+		aGlobalInt = ResponseCode;
+	}
+
+	if (projects.HasMaxResults())
+	{
+		aGlobalInt = 14;
+	}
+
+}
+
 TSharedRef<SDockTab> FJiraPluginModule::OnSpawnPluginTab(const FSpawnTabArgs& SpawnTabArgs)
 {
+	FHttpRequestRef getProjectRequest = FHttpModule::Get().CreateRequest();
+	getProjectRequest->SetVerb("GET");
+	getProjectRequest->AppendToHeader("Authorization", "Basic " + FBase64::Encode("luke.turner@tdtek.de:7YVZF0f5pprkBvQyU7pWD190"));
+	getProjectRequest->AppendToHeader("Accept", "application/json");
+	getProjectRequest->SetURL("https://tdtek.atlassian.net/rest/api/3/project/search");
+	getProjectRequest->OnProcessRequestComplete().BindRaw(this, &FJiraPluginModule::OnResponseReceived);
+	getProjectRequest->ProcessRequest();
+
 	FText WidgetText = FText::Format(
 		LOCTEXT("WindowWidgetText", "Add code to {0} in {1} to override this window's contents"),
 		FText::FromString(TEXT("FJiraPluginModule::OnSpawnPluginTab")),

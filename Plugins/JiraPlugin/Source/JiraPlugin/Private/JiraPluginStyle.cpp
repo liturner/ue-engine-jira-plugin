@@ -39,13 +39,20 @@ FName FJiraPluginStyle::GetStyleSetName()
 const FVector2D Icon16x16(16.0f, 16.0f);
 const FVector2D Icon20x20(20.0f, 20.0f);
 const FVector2D Icon40x40(40.0f, 40.0f);
+const FVector2D Icon64x64(64.0f, 64.0f);
+const FVector2D Icon128x128(128.0f, 128.0f);
 
 TSharedRef< FSlateStyleSet > FJiraPluginStyle::Create()
 {
 	TSharedRef< FSlateStyleSet > Style = MakeShareable(new FSlateStyleSet("JiraPluginStyle"));
 	Style->SetContentRoot(IPluginManager::Get().FindPlugin("JiraPlugin")->GetBaseDir() / TEXT("Resources"));
 
-	Style->Set("JiraPlugin.OpenPluginWindow", new IMAGE_BRUSH(TEXT("ButtonIcon_40x"), Icon40x40));
+	Style->Set("JiraPlugin.OpenPluginWindow", new IMAGE_BRUSH(TEXT("JiraThumbnail_40x"), Icon40x40));
+	Style->Set("ClassThumbnail.JiraConnection", new IMAGE_BRUSH(TEXT("JiraThumbnail_16x"), Icon16x16));
+	Style->Set("ClassThumbnail.JiraConnection", new IMAGE_BRUSH(TEXT("JiraThumbnail_20x"), Icon20x20));
+	Style->Set("ClassThumbnail.JiraConnection", new IMAGE_BRUSH(TEXT("JiraThumbnail_64x"), Icon64x64));
+	Style->Set("ClassIcon.JiraConnection", new IMAGE_BRUSH(TEXT("JiraIcon_16x"), Icon16x16));
+	Style->Set("ClassIcon.JiraConnection", new IMAGE_BRUSH(TEXT("JiraIcon_20x"), Icon20x20));
 
 	return Style;
 }
