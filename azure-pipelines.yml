@@ -1,10 +1,7 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
+# Copyright TD Technologies. All rights reserved.
 
 trigger:
-- main
+- master
 
 variables:
   uatBatchDir: '"C:\Program Files\Epic Games\UE_4.25\Engine\Build\BatchFiles\"'
