@@ -34,3 +34,11 @@ jobs:
         Resources\**
       TargetFolder: '$(Build.ArtifactStagingDirectory)'
       CleanTargetFolder: true
+      
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish to nas.tdtek.net' 
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: '$(Build.BuildNumber)'
+      publishLocation: 'FilePath'
+      TargetPath: '\\nas.tdtek.net\builds'
