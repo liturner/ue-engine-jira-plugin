@@ -24,4 +24,13 @@ jobs:
       script: RunUAT.bat BuildPlugin -Plugin="$(Build.SourcesDirectory)\Plugins\JiraPlugin\JiraPlugin.uplugin" -Package="$(Build.SourcesDirectory)\Build\JiraPlugin" -CreateSubFolder -VS2019
       workingDirectory: $(uatBatchDir)
 
-
+  - task: CopyFiles@2
+    displayName: 'Copy Build to: $(Build.ArtifactStagingDirectory)'
+    inputs:
+      SourceFolder: '$(Build.SourcesDirectory)\Build\JiraPlugin'
+      Contents: |
+        **\*?(*.uplugin|*.modules|*.dll)
+        Resources\**\*
+      TargetFolder: '$(Build.ArtifactStagingDirectory)'
+      CleanTargetFolder: true
+      preserveTimestamp: true
