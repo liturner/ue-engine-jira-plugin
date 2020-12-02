@@ -29,8 +29,8 @@ jobs:
     inputs:
       SourceFolder: '$(Build.SourcesDirectory)\Build\JiraPlugin'
       Contents: |
-        **\*?(*.uplugin|*.modules|*.dll)
-        Resources\**\*
+        *.uplugin
+        Binaries\**\?(*.modules|*.dll)
+        Resources\**
       TargetFolder: '$(Build.ArtifactStagingDirectory)'
       CleanTargetFolder: true
-      preserveTimestamp: true
