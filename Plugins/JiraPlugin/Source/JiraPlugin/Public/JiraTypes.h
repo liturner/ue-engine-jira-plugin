@@ -15,29 +15,101 @@
 #define INT64_DEFAULT int64()
 
 USTRUCT(BlueprintType)
-struct JIRAPLUGIN_API FJiraProject
+struct JIRAPLUGIN_API FJiraError
+#if CPP
+	: FJsonSerializable
+#endif
 {
 	GENERATED_BODY()
 
+#if CPP
+public:
+	BEGIN_JSON_SERIALIZER
+	END_JSON_SERIALIZER
+#endif
 public:
 
-	/// <summary>
-	/// Expand options that include additional project details in the response.
-	/// </summary>
+	/**
+	* Default constructor will initialise an empty structure with a "200" response code
+	*/
+	FJiraError();
+
+	/**
+	* The HTTP response code which Jira returned.
+	*/
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
+	int32 ResponseCode;
+
+	/**
+	* A short description of the error which has occured. Further information may be available.
+	*/
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
+	FString ErrorBrief;
+};
+
+
+USTRUCT(BlueprintType)
+struct JIRAPLUGIN_API FJiraProject
+#if CPP
+	: FJsonSerializable
+#endif
+{
+	GENERATED_BODY()
+
+#if CPP
+public:
+	BEGIN_JSON_SERIALIZER
+		JSON_SERIALIZE("expand", Expand);
+		JSON_SERIALIZE("self", SelfJira);
+		JSON_SERIALIZE("id", ID);
+		JSON_SERIALIZE("key", Key);
+		JSON_SERIALIZE("description", Description);
+	END_JSON_SERIALIZER
+#endif
+public:
+
+	/**
+	* Expand options that include additional project details in the response.
+	*/
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	FString Expand;
 
-	/// <summary>
-	/// The URL of the project details.
-	/// Format: uri
-	/// </summary>
+	/**
+	* The URL of the project details.
+	* Format: uri
+	*/
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (DisplayName = "Self"))
 	FString SelfJira;
 
+	/**
+	* The ID of the project.
+	*/
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	FString ID;
+
+	/**
+	* The key of the project.
+	*/
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	FString Key;
+
+	/**
+	* A brief description of the project.
+	*/
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	FString Description;
+
 };
 
-struct JIRAPLUGIN_API FJiraPageBeanProject : FJsonSerializable
+USTRUCT(BlueprintType)
+struct JIRAPLUGIN_API FJiraPageBeanProject
+#if CPP
+	: FJsonSerializable
+#endif
 {
+	GENERATED_BODY()
+
+#if CPP
 public:
 	BEGIN_JSON_SERIALIZER
 		JSON_SERIALIZE("self", Self);
@@ -47,9 +119,9 @@ public:
 		JSON_SERIALIZE("startAt", StartAt);
 		JSON_SERIALIZE("total", Total);
 		JSON_SERIALIZE("isLast", bIsLast);
-		//JSON_SERIALIZE_ARRAY_SERIALIZABLE("values", Values, FJiraProject);
+		JSON_SERIALIZE_ARRAY_SERIALIZABLE("values", Values, FJiraProject);
 	END_JSON_SERIALIZER
-
+#endif
 public:
 
 	bool const HasSelf() {

@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Styling/SlateStyle.h"
 
-#include "Jira/JiraTypes.h"
+#include "JiraTypes.h"
 
 /**  */
 class FJiraPluginStyle

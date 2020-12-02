@@ -11,6 +11,9 @@
 #include "UObject/ObjectMacros.h"
 #include "UObject/UObjectBaseUtility.h"
 #include "Components/SceneComponent.h"
+#include "HttpModule.h"
+#include "HttpManager.h"
+#include "Interfaces/IHttpResponse.h"
 
 #include "JiraConnection.generated.h"
 
@@ -35,8 +38,16 @@ public:
 		UFUNCTION(BlueprintPure, Category = "Jira")
 		static bool CanAuthenticate(const AJiraConnection* JiraConnection);
 
-		UFUNCTION(BlueprintImplementableEvent, Category = "Jira")
-		void OnResponseRecieved(const FString& Request, bool bWasSuccessful);
+		//UFUNCTION(BlueprintImplementableEvent, Category = "Jira")
+		//void OnResponseRecieved(const FString& Request, bool bWasSuccessful);
 
+		/**
+		* Create a request that can be then called using ProcessRequest(FHttpRequestRef). Use this instead of FHttpModule::Get().CreateRequest(); so we can centrally change the HTTP Manager stuff is needed.
+		*/
+		FHttpRequestRef CreateRequest();
 
+		/**
+		* Process a request using the connection information stored in this instance of a Jira Connection. Note, we automatically prepend the HTTP Server address to the Request. The caller must only the path after the server specify.
+		*/
+		bool ProcessRequest(FHttpRequestRef HttpRequestRef);
 };

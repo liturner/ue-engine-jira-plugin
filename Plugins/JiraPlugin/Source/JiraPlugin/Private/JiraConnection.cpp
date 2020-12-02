@@ -1,4 +1,4 @@
-#include "Jira/JiraConnection.h"
+#include "JiraConnection.h"
 
 AJiraConnection::AJiraConnection() 
 {
@@ -26,4 +26,23 @@ bool AJiraConnection::CanAuthenticate(const AJiraConnection* JiraConnection)
 		return false;
 	}
 	return true;
+}
+
+FHttpRequestRef AJiraConnection::CreateRequest()
+{
+	return FHttpModule::Get().CreateRequest();
+}
+
+bool AJiraConnection::ProcessRequest(FHttpRequestRef HttpRequestRef)
+{
+	if (!CanAuthenticate(this))
+	{
+		return false;
+	}
+
+	// "luke.turner@tdtek.de:7YVZF0f5pprkBvQyU7pWD190"
+	HttpRequestRef->AppendToHeader("Authorization", "Basic " + FBase64::Encode(UserEmail + ":" + ApiToken));
+	HttpRequestRef->AppendToHeader("Accept", "application/json");
+	HttpRequestRef->SetURL(ServerUrl + HttpRequestRef->GetURL());
+	return HttpRequestRef->ProcessRequest();
 }
