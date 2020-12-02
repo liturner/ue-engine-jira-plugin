@@ -9,10 +9,7 @@
 #include "UObject/Object.h"
 #include "UObject/UnrealType.h"
 #include "UObject/ObjectMacros.h"
-#include "UObject/UObjectBaseUtility.h"
-#include "Components/SceneComponent.h"
 #include "HttpModule.h"
-#include "HttpManager.h"
 #include "Interfaces/IHttpResponse.h"
 
 #include "JiraConnection.generated.h"

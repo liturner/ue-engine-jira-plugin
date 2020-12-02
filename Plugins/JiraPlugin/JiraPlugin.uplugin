@@ -4,8 +4,8 @@
 	"VersionName": "1.0",
 	"FriendlyName": "Atlassian Jira",
 	"Description": "Integrate Attlasian Jira into your applications and workflows. Boost productivity and enable user feedback direct from the user, to your team!",
-	"Category": "Automation",
-	"CreatedBy": "TD Technoloies",
+	"Category": "Blueprints",
+	"CreatedBy": "TD Technologies",
 	"CreatedByURL": "https://tdtek.de/",
 	"DocsURL": "",
 	"MarketplaceURL": "",
@@ -18,7 +18,7 @@
 		{
 			"Name": "JiraPlugin",
 			"Type": "Runtime",
-			"LoadingPhase": "Default"
+			"LoadingPhase": "PreLoadingScreen"
 		}
 	]
 }

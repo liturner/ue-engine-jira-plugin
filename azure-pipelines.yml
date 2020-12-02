@@ -21,7 +21,7 @@ jobs:
   - task: CmdLine@2
     displayName: 'Run UAT'
     inputs:
-      script: RunUAT.bat BuildPlugin -Plugin="$(Build.SourcesDirectory)\Plugins\JiraPlugin\JiraPlugin.uplugin" -Package="$(Build.SourcesDirectory)\Build\JiraPlugin" -CreateSubFolder
+      script: RunUAT.bat BuildPlugin -Plugin="$(Build.SourcesDirectory)\Plugins\JiraPlugin\JiraPlugin.uplugin" -Package="$(Build.SourcesDirectory)\Build\JiraPlugin" -CreateSubFolder -VS2019
       workingDirectory: $(uatBatchDir)
 
 

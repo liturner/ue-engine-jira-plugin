@@ -1,5 +1,7 @@
 #include "JiraConnection.h"
 
+#include "Misc/Base64.h"
+
 AJiraConnection::AJiraConnection() 
 {
 	// We hide some categories from the User, so make sure the defaults are correct
