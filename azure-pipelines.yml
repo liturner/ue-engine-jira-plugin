@@ -8,22 +8,18 @@ variables:
   majorVersion: 0
   minorVersion: 1
 
-name: '$(majorVersion).$(minorVersion).$(Rev:r)'
+name: 'BlueprintsForJira_$(majorVersion).$(minorVersion).$(Rev:r)'
 
 jobs:
 - job: buildPlugin
-
   pool: 'default'
-
   displayName: Build Plugin Job
-
   steps:
   - task: CmdLine@2
     displayName: 'Run UAT'
     inputs:
       script: RunUAT.bat BuildPlugin -Plugin="$(Build.SourcesDirectory)\Plugins\JiraPlugin\JiraPlugin.uplugin" -Package="$(Build.SourcesDirectory)\Build\JiraPlugin" -CreateSubFolder -VS2019
       workingDirectory: $(uatBatchDir)
-
   - task: CopyFiles@2
     displayName: 'Copy Build to: $(Build.ArtifactStagingDirectory)'
     inputs:
@@ -32,13 +28,19 @@ jobs:
         *.uplugin
         Binaries\**\?(*.modules|*.dll)
         Resources\**
-      TargetFolder: '$(Build.ArtifactStagingDirectory)'
+      TargetFolder: '$(Build.BinariesDirectory)'
       CleanTargetFolder: true
-      
+  - task: ArchiveFiles@2
+    inputs:
+      rootFolderOrFile: '$(Build.BinariesDirectory)'
+      includeRootFolder: false
+      archiveType: 'zip'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+      replaceExistingArchive: true
   - task: PublishBuildArtifacts@1
     displayName: 'Publish to nas.tdtek.net' 
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)'
       ArtifactName: '$(Build.BuildNumber)'
       publishLocation: 'FilePath'
-      TargetPath: '\\nas.tdtek.net\builds'
+      TargetPath: '\\nas.tdtek.net\builds\ue\'
