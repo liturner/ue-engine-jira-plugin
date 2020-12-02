@@ -28,14 +28,31 @@ jobs:
         *.uplugin
         Binaries\**\?(*.modules|*.dll)
         Resources\**
-      TargetFolder: '$(Build.BinariesDirectory)'
+      TargetFolder: '$(Build.BinariesDirectory)\Release'
+      CleanTargetFolder: true
+  - task: CopyFiles@2
+    displayName: 'Copy Debug to: $(Build.ArtifactStagingDirectory)'
+    inputs:
+      SourceFolder: '$(Build.SourcesDirectory)\Build\JiraPlugin'
+      Contents: |
+        *.uplugin
+        Binaries\**\?(*.modules|*.dll|*.pch)
+        Resources\**
+      TargetFolder: '$(Build.BinariesDirectory)\Debug'
       CleanTargetFolder: true
   - task: ArchiveFiles@2
     inputs:
-      rootFolderOrFile: '$(Build.BinariesDirectory)'
+      rootFolderOrFile: '$(Build.BinariesDirectory)\Release'
       includeRootFolder: false
       archiveType: 'zip'
       archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildNumber).zip'
+      replaceExistingArchive: true
+  - task: ArchiveFiles@2
+    inputs:
+      rootFolderOrFile: '$(Build.BinariesDirectory)\Debug'
+      includeRootFolder: false
+      archiveType: 'zip'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildNumber)-d.zip'
       replaceExistingArchive: true
   - task: PublishBuildArtifacts@1
     displayName: 'Publish to nas.tdtek.net' 
