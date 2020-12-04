@@ -18,7 +18,7 @@ jobs:
   - task: CmdLine@2
     displayName: 'Run UAT'
     inputs:
-      script: RunUAT.bat BuildPlugin -Plugin="$(Build.SourcesDirectory)\Plugins\JiraPlugin\JiraPlugin.uplugin" -Package="$(Build.BinariesDirectory)" -CreateSubFolder -VS2019
+      script: RunUAT.bat BuildPlugin -Plugin="$(Build.SourcesDirectory)\Plugins\JiraPlugin\JiraPlugin.uplugin" -Package="$(Build.BinariesDirectory)" -CreateSubFolder -VS2019 -TargetPlatforms=Win32+Win64+Android+HoloLens
       workingDirectory: $(uatBatchDir)
   - task: CopyFiles@2
     displayName: 'Perpare Build Files'
