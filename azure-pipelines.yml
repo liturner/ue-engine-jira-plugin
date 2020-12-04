@@ -18,38 +18,38 @@ jobs:
   - task: CmdLine@2
     displayName: 'Run UAT'
     inputs:
-      script: RunUAT.bat BuildPlugin -Plugin="$(Build.SourcesDirectory)\Plugins\JiraPlugin\JiraPlugin.uplugin" -Package="$(Build.SourcesDirectory)\Build\JiraPlugin" -CreateSubFolder -VS2019
+      script: RunUAT.bat BuildPlugin -Plugin="$(Build.SourcesDirectory)\Plugins\JiraPlugin\JiraPlugin.uplugin" -Package="$(Build.BinariesDirectory)" -CreateSubFolder -VS2019
       workingDirectory: $(uatBatchDir)
   - task: CopyFiles@2
-    displayName: 'Copy Build to: $(Build.ArtifactStagingDirectory)'
+    displayName: 'Perpare Build Files'
     inputs:
-      SourceFolder: '$(Build.SourcesDirectory)\Build\JiraPlugin'
+      SourceFolder: '$(Build.BinariesDirectory)'
       Contents: |
         *.uplugin
         Binaries\**\?(*.modules|*.dll)
         Resources\**
-      TargetFolder: '$(Build.BinariesDirectory)\Release'
+      TargetFolder: '$(Build.BinariesDirectory)\_Release'
       CleanTargetFolder: true
   - task: CopyFiles@2
-    displayName: 'Copy Debug to: $(Build.ArtifactStagingDirectory)'
+    displayName: 'Perpare Debug Files'
     inputs:
-      SourceFolder: '$(Build.SourcesDirectory)\Build\JiraPlugin'
+      SourceFolder: '$(Build.BinariesDirectory)'
       Contents: |
         *.uplugin
         Binaries\**\?(*.modules|*.dll|*.pch)
         Resources\**
-      TargetFolder: '$(Build.BinariesDirectory)\Debug'
+      TargetFolder: '$(Build.BinariesDirectory)\_Debug'
       CleanTargetFolder: true
   - task: ArchiveFiles@2
     inputs:
-      rootFolderOrFile: '$(Build.BinariesDirectory)\Release'
+      rootFolderOrFile: '$(Build.BinariesDirectory)\_Release'
       includeRootFolder: false
       archiveType: 'zip'
       archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildNumber).zip'
       replaceExistingArchive: true
   - task: ArchiveFiles@2
     inputs:
-      rootFolderOrFile: '$(Build.BinariesDirectory)\Debug'
+      rootFolderOrFile: '$(Build.BinariesDirectory)\_Debug'
       includeRootFolder: false
       archiveType: 'zip'
       archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildNumber)-d.zip'
