@@ -16,15 +16,13 @@ jobs:
   displayName: Build Plugin Job
   steps:
   - task: CmdLine@2
-    displayName: 'Configure Android Stuff'
-    inputs:
-      script: 'SetupAndroid.bat'
-      workingDirectory: 'C:\Program Files\Epic Games\UE_4.25\Engine\Extras\Android'
-  - task: CmdLine@2
     displayName: 'Run UAT'
     inputs:
-      script: RunUAT.bat BuildPlugin -Plugin="$(Build.SourcesDirectory)\Plugins\JiraPlugin\JiraPlugin.uplugin" -Package="$(Build.BinariesDirectory)" -CreateSubFolder -VS2019 -TargetPlatforms=Win32+Win64+HoloLens
-      workingDirectory: $(uatBatchDir)
+      script: |
+        C:\Program Files\Epic Games\UE_4.25\Engine\Extras\Android\SetupAndroid.bat'
+        RunUAT.bat BuildPlugin -Plugin="$(Build.SourcesDirectory)\Plugins\JiraPlugin\JiraPlugin.uplugin" -Package="$(Build.BinariesDirectory)" -CreateSubFolder -VS2019 -TargetPlatforms=Win32+Win64+HoloLens+Android
+      workingDirectory: '$(uatBatchDir)''
+
   - task: CopyFiles@2
     displayName: 'Perpare Build Files'
     inputs:
