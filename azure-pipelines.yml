@@ -21,7 +21,7 @@ jobs:
       script: |
         C:\Program Files\Epic Games\UE_4.25\Engine\Extras\Android\SetupAndroid.bat'
         RunUAT.bat BuildPlugin -Plugin="$(Build.SourcesDirectory)\Plugins\JiraPlugin\JiraPlugin.uplugin" -Package="$(Build.BinariesDirectory)" -CreateSubFolder -VS2019 -TargetPlatforms=Win32+Win64+HoloLens+Android
-      workingDirectory: '$(uatBatchDir)''
+      workingDirectory: '$(uatBatchDir)'
 
   - task: CopyFiles@2
     displayName: 'Perpare Build Files'
