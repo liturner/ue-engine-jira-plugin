@@ -18,9 +18,7 @@ jobs:
   - task: CmdLine@2
     displayName: 'Run UAT'
     inputs:
-      script: |
-        C:\Program Files\Epic Games\UE_4.25\Engine\Extras\Android\SetupAndroid.bat'
-        RunUAT.bat BuildPlugin -Plugin="$(Build.SourcesDirectory)\Plugins\JiraPlugin\JiraPlugin.uplugin" -Package="$(Build.BinariesDirectory)" -CreateSubFolder -VS2019 -TargetPlatforms=Win32+Win64+HoloLens+Android
+      script: RunUAT.bat BuildPlugin -Plugin="$(Build.SourcesDirectory)\Plugins\JiraPlugin\JiraPlugin.uplugin" -Package="$(Build.BinariesDirectory)" -CreateSubFolder -VS2019 -TargetPlatforms=Win32+Win64+HoloLens
       workingDirectory: '$(uatBatchDir)'
 
   - task: CopyFiles@2
