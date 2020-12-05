@@ -20,7 +20,6 @@ jobs:
     inputs:
       script: RunUAT.bat BuildPlugin -Plugin="$(Build.SourcesDirectory)\Plugins\JiraPlugin\JiraPlugin.uplugin" -Package="$(Build.BinariesDirectory)" -CreateSubFolder -VS2019 -TargetPlatforms=Win32+Win64+HoloLens
       workingDirectory: '$(uatBatchDir)'
-
   - task: CopyFiles@2
     displayName: 'Perpare Build Files'
     inputs:
@@ -62,3 +61,17 @@ jobs:
       ArtifactName: '$(Build.BuildNumber)'
       publishLocation: 'FilePath'
       TargetPath: '\\nas.tdtek.net\builds\ue\'
+
+- job: buildTestProject
+  pool: 'default'
+  displayName: Build Test Project Job
+  dependsOn: buildPlugin
+  steps:
+    - bash: echo "Placeholder Build Test Project"
+
+- job: executeTestProject
+  pool: 'default'
+  displayName: Execute Test Project Job
+  dependsOn: buildTestProject
+  steps:
+    - bash: echo "Placeholder Execute Test Project"
