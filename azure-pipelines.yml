@@ -62,16 +62,13 @@ jobs:
       publishLocation: 'FilePath'
       TargetPath: '\\nas.tdtek.net\builds\ue\'
 
-- job: buildTestProject
-  pool: 'default'
-  displayName: Build Test Project Job
-  dependsOn: buildPlugin
-  steps:
-    - bash: echo "Placeholder Build Test Project"
-
 - job: executeTestProject
   pool: 'default'
   displayName: Execute Test Project Job
-  dependsOn: buildTestProject
+  dependsOn: buildPlugin
   steps:
-    - bash: echo "Placeholder Execute Test Project"
+  - task: CmdLine@2
+    displayName: 'Run Tests'
+    inputs:
+      script: UE4Editor.exe $(Build.SourcesDirectory)\JiraEnginePlugin.uproject -ExecCmds="Automation RunTests FTEST_FunctionalTests" -unattended -nopause -testexit="Automation Test Queue Empty" -ReportOutputPath="$(Build.ArtifactStagingDirectory)/$(Build.BuildNumber)-TestLog"
+      workingDirectory: 'C:\Program Files\Epic Games\UE_4.25\Engine\Binaries\Win64\'
