@@ -1,0 +1,3 @@
+[submodule "DevOps-Convert-UnrealTests"]
+	path = DevOps-Convert-UnrealTests
+	url = https://TDTechnologies@dev.azure.com/TDTechnologies/UE-Plugins/_git/DevOps-Convert-UnrealTests
