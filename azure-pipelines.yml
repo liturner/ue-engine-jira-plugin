@@ -15,6 +15,8 @@ jobs:
   pool: 'default'
   displayName: Execute Tests Job
   steps:
+  - checkout: self
+    submodules: true
   - task: CmdLine@2
     displayName: 'Run Tests'
     inputs:
