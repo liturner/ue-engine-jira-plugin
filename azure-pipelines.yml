@@ -26,7 +26,7 @@ jobs:
     displayName: 'Convert Unreal Results to VSTest (.trx) Format'
     inputs:
       filePath: '$(Build.SourcesDirectory)\DevOps-Convert-UnrealTests\Convert-UnrealTests.ps1'
-      arguments: '"$(Build.ArtifactStagingDirectory)/$(Build.BuildNumber)-TestLog" "$(Build.ArtifactStagingDirectory)/$(Build.BuildNumber)-TestLog.trx"'
+      arguments: '"$(Build.ArtifactStagingDirectory)\$(Build.BuildNumber)-TestLog" "$(Build.ArtifactStagingDirectory)\$(Build.BuildNumber)-TestLog.trx"'
   - task: PublishTestResults@2
     inputs:
       testResultsFormat: 'VSTest'
