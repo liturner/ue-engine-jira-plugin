@@ -102,11 +102,11 @@ print("Output file is " + outFile)
 
 if(not os.path.isdir(inDir)):
     print("Input Directory is not a valid path")
-    sys.exit()
+    sys.exit(1)
 
 if(not os.path.isfile(inFile)):
     print("Input Directory does not contain an index.json file")
-    sys.exit()
+    sys.exit(1)
 
 with open(inFile, 'r', encoding='utf-8-sig') as jsonFile :
     testResults = json.load(jsonFile)
