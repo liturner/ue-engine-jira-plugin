@@ -11,8 +11,32 @@ variables:
 name: 'BlueprintsForJira_$(majorVersion).$(minorVersion).$(Rev:r)'
 
 jobs:
+- job: executeTestProject
+  pool: 'default'
+  displayName: Execute Tests Job
+  steps:
+  - task: CmdLine@2
+    displayName: 'Run Tests'
+    inputs:
+      script: UE4Editor.exe $(Build.SourcesDirectory)\JiraEnginePlugin.uproject -ExecCmds="Automation RunTests FTEST_FunctionalTests" -unattended -nopause -testexit="Automation Test Queue Empty" -ReportOutputPath="$(Build.ArtifactStagingDirectory)/$(Build.BuildNumber)-TestLog"
+      workingDirectory: 'C:\Program Files\Epic Games\UE_4.25\Engine\Binaries\Win64\'
+  - task: PowerShell@2
+    displayName: 'Convert Unreal Results to VSTest (.trx) Format'
+    inputs:
+      filePath: '$(Build.SourcesDirectory)\DevOps-Convert-UnrealTests\Convert-UnrealTests.ps1'
+      arguments: '"$(Build.ArtifactStagingDirectory)/$(Build.BuildNumber)-TestLog" "$(Build.ArtifactStagingDirectory)/$(Build.BuildNumber)-TestLog.trx"'
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'VSTest'
+      testResultsFiles: '*.trx'
+      searchFolder: '$(Build.ArtifactStagingDirectory)'
+      failTaskOnFailedTests: true
+      testRunTitle: '$(Build.BuildNumber)'
+      publishRunAttachments: false
+
 - job: buildPlugin
   pool: 'default'
+  dependsOn: executeTestProject
   displayName: Build Plugin Job
   steps:
   - task: CmdLine@2
@@ -61,14 +85,3 @@ jobs:
       ArtifactName: '$(Build.BuildNumber)'
       publishLocation: 'FilePath'
       TargetPath: '\\nas.tdtek.net\builds\ue\'
-
-- job: executeTestProject
-  pool: 'default'
-  displayName: Execute Test Project Job
-  dependsOn: buildPlugin
-  steps:
-  - task: CmdLine@2
-    displayName: 'Run Tests'
-    inputs:
-      script: UE4Editor.exe $(Build.SourcesDirectory)\JiraEnginePlugin.uproject -ExecCmds="Automation RunTests FTEST_FunctionalTests" -unattended -nopause -testexit="Automation Test Queue Empty" -ReportOutputPath="$(Build.ArtifactStagingDirectory)/$(Build.BuildNumber)-TestLog"
-      workingDirectory: 'C:\Program Files\Epic Games\UE_4.25\Engine\Binaries\Win64\'
