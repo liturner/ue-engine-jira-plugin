@@ -6,7 +6,7 @@
 
 FJiraError::FJiraError() : 
 	ResponseCode(200),
-	ErrorBrief()
+	ErrorBrief(TEXT("Success"))
 {
 
 }

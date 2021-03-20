@@ -23,6 +23,11 @@ AJiraConnection::AJiraConnection()
 
 bool AJiraConnection::CanAuthenticate(const AJiraConnection* JiraConnection)
 {
+	if (JiraConnection == NULL)
+	{
+		return false;
+	}
+
 	if (JiraConnection->UserEmail.IsEmpty() || JiraConnection->ApiToken.IsEmpty() || JiraConnection->ServerUrl.IsEmpty())
 	{
 		return false;

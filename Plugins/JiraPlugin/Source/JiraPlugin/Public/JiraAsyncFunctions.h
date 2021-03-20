@@ -18,8 +18,14 @@
 private: \
 	const TMap<int32, FString> SupportedErrorsInitialiser() \
 	{ \
-		TMap<int32, FString> SupportedErrorsMap;
-
+		TMap<int32, FString> SupportedErrorsMap; \
+		SupportedErrorsMap.Add(200, TEXT("Success")); \
+		SupportedErrorsMap.Add(400, TEXT("Something went wrong")); \
+		SupportedErrorsMap.Add(498, TEXT("Cannot deserialise response body")); \
+		SupportedErrorsMap.Add(499, TEXT("Cannot authenticate, JiraConnection cannot incomplete")); \
+		SupportedErrorsMap.Add(503, TEXT("Service unavailable")); \
+		SupportedErrorsMap.Add(599, TEXT("Request failed for an unknown reason"));
+		
 #define JIRA_ERROR_CODE(Code, Description) \
 		SupportedErrorsMap.Add(Code, TEXT(Description));
 
@@ -37,8 +43,8 @@ class UGetProjectAsync : public UBlueprintAsyncActionBase
 	GENERATED_BODY()
 
 	BEGIN_JIRA_ERROR_CODES
-		JIRA_ERROR_CODE(201, "Grapefruit");
-		JIRA_ERROR_CODE(404, "Pineapple");
+		JIRA_ERROR_CODE(401, "The authentication credentials are incorrect or missing");
+		JIRA_ERROR_CODE(404, "The project is not found or the user does not have permission to view it");
 	END_JIRA_ERROR_CODES
 
 public:

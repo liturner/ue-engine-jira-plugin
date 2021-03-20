@@ -19,11 +19,24 @@ UGetProjectAsync* UGetProjectAsync::GetProjectAsync(const FString ProjectIdOrKey
 
 void UGetProjectAsync::Activate()
 {
+	if (!AJiraConnection::CanAuthenticate(JiraConnectionWeakPtr.Get()))
+	{
+		FJiraProject Project;
+		FJiraError ErrorDetails;
+		ErrorDetails.ResponseCode = 499;
+		ErrorDetails.ErrorBrief = ErrorMap.FindRef(ErrorDetails.ResponseCode);
+		OnFailure.Broadcast(ErrorDetails, Project);
+		return;
+	}
+
 	FHttpRequestRef NewRequest = JiraConnectionWeakPtr->CreateRequest();
 	NewRequest->SetVerb("GET");
 	NewRequest->SetURL("/rest/api/3/project/" + ProjectIdOrKey);
 	NewRequest->OnProcessRequestComplete().BindUObject(this, &UGetProjectAsync::OnResponseReceived);
-	JiraConnectionWeakPtr->ProcessRequest(NewRequest);
+	if (!JiraConnectionWeakPtr->ProcessRequest(NewRequest))
+	{
+		NewRequest->CancelRequest();
+	}
 }
 
 void UGetProjectAsync::OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful) 
@@ -33,18 +46,35 @@ void UGetProjectAsync::OnResponseReceived(FHttpRequestPtr Request, FHttpResponse
 
 	if (bWasSuccessful)
 	{
-		FString ResponseText = Response->GetContentAsString();
+		int32 ResponseCode = Response->GetResponseCode();
 
-		
-		if (!Project.FromJson(ResponseText))
-		{
-			// error
+		if (ResponseCode == 200) {
+			FString ResponseText = Response->GetContentAsString();
+			if (!Project.FromJson(ResponseText))
+			{
+				ErrorDetails.ResponseCode = 498;
+				ErrorDetails.ErrorBrief = ErrorMap.FindRef(ErrorDetails.ResponseCode);
+
+				OnFailure.Broadcast(ErrorDetails, Project);
+			}
+			else
+			{
+				OnSuccess.Broadcast(ErrorDetails, Project);
+			}
 		}
+		else 
+		{
+			ErrorDetails.ResponseCode = ResponseCode;
+			ErrorDetails.ErrorBrief = ErrorMap.FindRef(ErrorDetails.ResponseCode);
 
-		OnSuccess.Broadcast(ErrorDetails, Project);
+			OnFailure.Broadcast(ErrorDetails, Project);
+		}
 	}
 	else
 	{
+		ErrorDetails.ResponseCode = 599;
+		ErrorDetails.ErrorBrief = ErrorMap.FindRef(ErrorDetails.ResponseCode);
+
 		OnFailure.Broadcast(ErrorDetails, Project);
 	}
 }
