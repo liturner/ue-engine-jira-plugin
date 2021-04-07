@@ -3,6 +3,7 @@
 #include "JiraAsyncFunctions.h"
 #include "EngineGlobals.h"
 #include "Engine/Engine.h"
+#include "Math/NumericLimits.h"
 
 UGetProjectAsync::UGetProjectAsync(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -19,16 +20,6 @@ UGetProjectAsync* UGetProjectAsync::GetProjectAsync(const FString ProjectIdOrKey
 
 void UGetProjectAsync::Activate()
 {
-	if (!AJiraConnection::CanAuthenticate(JiraConnectionWeakPtr.Get()))
-	{
-		FJiraProject Project;
-		FJiraError ErrorDetails;
-		ErrorDetails.ResponseCode = 499;
-		ErrorDetails.ErrorBrief = ErrorMap.FindRef(ErrorDetails.ResponseCode);
-		OnFailure.Broadcast(ErrorDetails, Project);
-		return;
-	}
-
 	FHttpRequestRef NewRequest = JiraConnectionWeakPtr->CreateRequest();
 	NewRequest->SetVerb("GET");
 	NewRequest->SetURL("/rest/api/3/project/" + ProjectIdOrKey);
@@ -36,6 +27,7 @@ void UGetProjectAsync::Activate()
 	if (!JiraConnectionWeakPtr->ProcessRequest(NewRequest))
 	{
 		NewRequest->CancelRequest();
+		return;
 	}
 }
 
@@ -72,7 +64,16 @@ void UGetProjectAsync::OnResponseReceived(FHttpRequestPtr Request, FHttpResponse
 	}
 	else
 	{
+		// Generic "Something went wrong" code
 		ErrorDetails.ResponseCode = 599;
+
+		// If a better code was stored at a previous step, use it
+		FString AbortCode = Request->GetHeader("AbortCode");
+		if (!AbortCode.IsEmpty())
+		{
+			ErrorDetails.ResponseCode = FCString::Atoi(*AbortCode);
+		}
+
 		ErrorDetails.ErrorBrief = ErrorMap.FindRef(ErrorDetails.ResponseCode);
 
 		OnFailure.Broadcast(ErrorDetails, Project);

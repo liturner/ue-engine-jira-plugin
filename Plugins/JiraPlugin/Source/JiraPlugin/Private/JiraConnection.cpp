@@ -44,12 +44,20 @@ bool AJiraConnection::ProcessRequest(FHttpRequestRef HttpRequestRef)
 {
 	if (!CanAuthenticate(this))
 	{
+		// We insert an "Abort Code" into the Request which can later be used to detect why the request was cancelled
+		HttpRequestRef->AppendToHeader("AbortCode", "499");
 		return false;
 	}
 
-	// "luke.turner@tdtek.de:7YVZF0f5pprkBvQyU7pWD190"
 	HttpRequestRef->AppendToHeader("Authorization", "Basic " + FBase64::Encode(UserEmail + ":" + ApiToken));
 	HttpRequestRef->AppendToHeader("Accept", "application/json");
 	HttpRequestRef->SetURL(ServerUrl + HttpRequestRef->GetURL());
-	return HttpRequestRef->ProcessRequest();
+	bool requestStarted = HttpRequestRef->ProcessRequest();
+
+	if (!requestStarted)
+	{
+		HttpRequestRef->AppendToHeader("AbortCode", "599");
+	}
+
+	return requestStarted;
 }

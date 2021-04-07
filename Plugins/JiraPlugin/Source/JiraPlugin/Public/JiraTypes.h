@@ -49,6 +49,88 @@ public:
 
 
 USTRUCT(BlueprintType)
+struct JIRAPLUGIN_API FJiraIssueTypeDetails
+#if CPP
+	: FJsonSerializable
+#endif
+{
+	GENERATED_BODY()
+
+#if CPP
+public:
+	BEGIN_JSON_SERIALIZER
+		JSON_SERIALIZE("self", SelfJira);
+		JSON_SERIALIZE("id", ID);
+		JSON_SERIALIZE("description", Description);
+		JSON_SERIALIZE("iconUrl", IconUrl);
+		JSON_SERIALIZE("name", Name);
+		JSON_SERIALIZE("subtask", bIsSubtask);
+		JSON_SERIALIZE("avatartId", AvatarID);
+		JSON_SERIALIZE("entityId", EntityID);
+		JSON_SERIALIZE("heirarchyLevel", HeirarchyLevel);
+	END_JSON_SERIALIZER
+#endif
+public:
+
+	/**
+	* The URL of the project details.
+	* Format: uri
+	*/
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (DisplayName = "Self"))
+	FString SelfJira;
+
+	/**
+	* The ID of the project.
+	*/
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	FString ID;
+
+	/**
+	* A brief description of the project.
+	*/
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	FString Description;
+
+	/**
+	* The URL of the issue type's avatar.
+	*/
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	FString IconUrl;
+
+	/**
+	* The name of the issue type.
+	*/
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	FString Name;
+
+	/**
+	* Whether this issue type is used to create subtasks.
+	*/
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	bool bIsSubtask;
+
+	/**
+	* The ID of the issue type's avatar.
+	*/
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	int64 AvatarID;
+
+	/**
+	* Unique ID for next-gen projects.
+	*/
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	FString EntityID;
+
+	/**
+	* Hierarchy level of the issue type.
+	*/
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	int32 HeirarchyLevel;
+
+};
+
+
+USTRUCT(BlueprintType)
 struct JIRAPLUGIN_API FJiraProject
 #if CPP
 	: FJsonSerializable
@@ -64,6 +146,7 @@ public:
 		JSON_SERIALIZE("id", ID);
 		JSON_SERIALIZE("key", Key);
 		JSON_SERIALIZE("description", Description);
+		JSON_SERIALIZE_ARRAY_SERIALIZABLE("issueTypes", IssueTypes, FJiraIssueTypeDetails);
 	END_JSON_SERIALIZER
 #endif
 public:
@@ -98,6 +181,12 @@ public:
 	*/
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	FString Description;
+
+	/**
+	* The list of items.
+	*/
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	TArray<FJiraIssueTypeDetails> IssueTypes;
 
 };
 
@@ -157,44 +246,44 @@ public:
 
 private:
 
-	/// <summary>
-	/// The URL of the page.
-	/// Format: uri
-	/// </summary>
+	/**
+	* The URL of the page.
+	* Format: uri
+	*/
 	FString Self;
 
-	/// <summary>
-	/// If there is another page of results, the URL of the next page.
-	/// Format: uri
-	/// </summary>
+	/**
+	* If there is another page of results, the URL of the next page.
+	* Format: uri
+	*/
 	FString NextPage;
 
-	/// <summary>
-	/// The maximum number of items that could be returned.
-	/// Format: int32
-	/// </summary>
+	/**
+	* The maximum number of items that could be returned.
+	* Format: int32
+	*/
 	int32 MaxResults;
 
-	/// <summary>
-	/// The index of the first item returned.
-	/// Format: int64
-	/// </summary>
+	/**
+	* The index of the first item returned.
+	* Format: int64
+	*/
 	int64 StartAt;
 
-	/// <summary>
-	/// The number of items returned.
-	/// Format: int64
-	/// </summary>
+	/**
+	* The number of items returned.
+	* Format: int64
+	*/
 	int64 Total;
 
-	/// <summary>
-	/// Whether this is the last page.
-	/// </summary>
+	/**
+	* Whether this is the last page.
+	*/
 	bool bIsLast;
 
-	/// <summary>
-	/// The list of items.
-	/// </summary>
+	/**
+	* The list of items.
+	*/
 	TArray<FJiraProject> Values;
 };
 
