@@ -37,13 +37,13 @@ public:
 	/**
 	* The HTTP response code which Jira returned.
 	*/
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "HTTP")
 	int32 ResponseCode;
 
 	/**
 	* A short description of the error which has occured. Further information may be available.
 	*/
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "General")
 	FString ErrorBrief;
 };
 
@@ -76,55 +76,55 @@ public:
 	* The URL of the project details.
 	* Format: uri
 	*/
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (DisplayName = "Self"))
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "HTTP", meta = (DisplayName = "Self"))
 	FString SelfJira;
 
 	/**
 	* The ID of the project.
 	*/
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "General")
 	FString ID;
 
 	/**
 	* A brief description of the project.
 	*/
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "General")
 	FString Description;
 
 	/**
 	* The URL of the issue type's avatar.
 	*/
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "HTTP")
 	FString IconUrl;
 
 	/**
 	* The name of the issue type.
 	*/
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "General")
 	FString Name;
 
 	/**
 	* Whether this issue type is used to create subtasks.
 	*/
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "General")
 	bool bIsSubtask;
 
 	/**
 	* The ID of the issue type's avatar.
 	*/
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "General")
 	int64 AvatarID;
 
 	/**
 	* Unique ID for next-gen projects.
 	*/
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "General")
 	FString EntityID;
 
 	/**
 	* Hierarchy level of the issue type.
 	*/
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "General")
 	int32 HeirarchyLevel;
 
 };
@@ -154,38 +154,38 @@ public:
 	/**
 	* Expand options that include additional project details in the response.
 	*/
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "General")
 	FString Expand;
 
 	/**
 	* The URL of the project details.
 	* Format: uri
 	*/
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (DisplayName = "Self"))
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "HTTP", meta = (DisplayName = "Self"))
 	FString SelfJira;
 
 	/**
 	* The ID of the project.
 	*/
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "General")
 	FString ID;
 
 	/**
 	* The key of the project.
 	*/
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "General")
 	FString Key;
 
 	/**
 	* A brief description of the project.
 	*/
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "General")
 	FString Description;
 
 	/**
 	* The list of items.
 	*/
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "General")
 	TArray<FJiraIssueTypeDetails> IssueTypes;
 
 };
