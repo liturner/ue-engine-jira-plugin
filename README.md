@@ -2,6 +2,13 @@
 
 Developed with Unreal Engine 4
 
+# Development Environment
+* Visual Studio 2019
+    * [Workload] Game development with C++
+    * C++ profiling tools
+    * C++ AddressSanitizer
+    * Windows 10.0.20348.0 SDK
+
 
 # Build Command Cheat Sheet
 * Run Tests
