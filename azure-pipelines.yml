@@ -4,7 +4,6 @@ trigger:
 - master
 
 variables:
-  uatBatchDir: '"C:\Program Files\Epic Games\UE_4.25\Engine\Build\BatchFiles\"'
   majorVersion: 0
   minorVersion: 1
 
@@ -12,7 +11,10 @@ name: 'BlueprintsForJira_$(majorVersion).$(minorVersion).$(Rev:r)'
 
 jobs:
 - job: executeTestProject
-  pool: 'default'
+  pool: 
+    name: Default
+    demands:
+    - UE_4.27
   displayName: Execute Tests Job
   steps:
   - checkout: self
@@ -21,7 +23,7 @@ jobs:
     displayName: 'Run Tests'
     inputs:
       script: UE4Editor.exe $(Build.SourcesDirectory)\JiraEnginePlugin.uproject -ExecCmds="Automation RunTests FTEST_FunctionalTests" -unattended -nopause -testexit="Automation Test Queue Empty" -ReportOutputPath="$(Build.ArtifactStagingDirectory)/$(Build.BuildNumber)-TestLog"
-      workingDirectory: 'C:\Program Files\Epic Games\UE_4.25\Engine\Binaries\Win64\'
+      workingDirectory: '$(UE_4.27)\Binaries\Win64\'
   - task: PowerShell@2
     displayName: 'Convert Unreal Results to VSTest (.trx) Format'
     inputs:
@@ -37,7 +39,10 @@ jobs:
       publishRunAttachments: false
 
 - job: buildPlugin
-  pool: 'default'
+  pool: 
+    name: Default
+    demands:
+    - UE_4.27
   dependsOn: executeTestProject
   displayName: Build Plugin Job
   steps:
@@ -45,7 +50,7 @@ jobs:
     displayName: 'Run UAT'
     inputs:
       script: RunUAT.bat BuildPlugin -Plugin="$(Build.SourcesDirectory)\Plugins\JiraPlugin\JiraPlugin.uplugin" -Package="$(Build.BinariesDirectory)" -CreateSubFolder -VS2019 -TargetPlatforms=Win32+Win64+HoloLens
-      workingDirectory: '$(uatBatchDir)'
+      workingDirectory: '$(UE_4.27)\Build\BatchFiles\'
   - task: CopyFiles@2
     displayName: 'Perpare Build Files'
     inputs:
